@@ -1,0 +1,257 @@
+Project trello{
+  database_type: 'PostgreSQL'
+}
+
+Table users{
+  id            integer      [primary key, not null, increment]
+  name          varchar(100) [not null]
+  email         varchar(150) [not null, unique]
+  password_hash varchar(255) [not null]
+  avatar_url    varchar(500) [null]
+  bio           varchar(300) [null]
+  is_verified   boolean      [not null, default: false]
+  is_active     boolean      [not null, default: true]
+  last_login_at datetime     [null]
+  created_at    datetime     [not null]
+  updated_at    datetime     [not null]
+}
+
+Table roles{
+  id          integer      [primary key, not null, increment]
+  name        varchar(50)  [not null, unique]
+  description varchar(200) [null]
+  created_at  datetime     [not null]
+}
+
+Table permissions{
+  id          integer      [primary key, not null, increment]
+  name        varchar(100) [not null, unique]
+  description varchar(200) [null]
+  created_at  datetime     [not null]
+}
+
+Table role_permissions{
+  role_id       integer [not null, ref: > roles.id]
+  permission_id integer [not null, ref: > permissions.id]
+  primary key(role_id, permission_id)
+}
+
+Table user_roles{
+  user_id    integer  [not null, ref: > users.id]
+  role_id    integer  [not null, ref: > roles.id]
+  granted_by integer  [null, ref: > users.id]
+  granted_at datetime [not null]
+  primary key(user_id, role_id)
+}
+
+Table plans{
+  id                  integer      [primary key, not null, increment]
+  name                varchar(50)  [not null]
+  max_workspaces      integer      [not null]
+  max_members_per_ws  integer      [not null]
+  max_boards_per_ws   integer      [not null]
+  max_cards_per_board integer      [not null]
+  can_use_analytics   boolean      [not null, default: false]
+  can_custom_fields   boolean      [not null, default: false]
+  can_upload_files    boolean      [not null, default: false]
+  storage_mb          integer      [not null, default: 0]
+  price_monthly       float        [not null, default: 0]
+  created_at          datetime     [not null]
+}
+
+Table subscriptions{
+  id          integer      [primary key, not null, increment]
+  user_id     integer      [not null, ref: > users.id]
+  plan_id     integer      [not null, ref: > plans.id]
+  status      enum('active', 'past_due', 'canceled', 'trialing', 'expired') [not null]
+  starts_at   datetime     [not null]
+  expires_at  datetime     [null]
+  payment_ref varchar(200) [null]
+  created_at  datetime     [not null]
+  updated_at  datetime     [not null]
+}
+
+Table workspaces{
+  id          integer      [primary key, not null, increment]
+  owner_id    integer      [not null, ref: > users.id]
+  name        varchar(100) [not null]
+  slug        varchar(100) [not null, unique]
+  description varchar(500) [null]
+  logo_url    varchar(500) [null]
+  is_active   boolean      [not null, default: true]
+  created_at  datetime     [not null]
+  updated_at  datetime     [not null]
+}
+
+Table workspace_members{
+  workspace_id integer  [not null, ref: > workspaces.id]
+  user_id      integer  [not null, ref: > users.id]
+  role         enum('owner', 'admin', 'member', 'viewer', 'guest') [not null, default: 'member']
+  status       enum('active', 'suspended', 'pending') [not null, default: 'active']
+  joined_at    datetime [not null]
+  invited_by   integer  [null, ref: > users.id]
+  primary key(workspace_id, user_id)
+}
+
+Table workspace_invitations{
+  id           integer      [primary key, not null, increment]
+  workspace_id integer      [not null, ref: > workspaces.id]
+  invited_by   integer      [not null, ref: > users.id]
+  email        varchar(150) [not null]
+  role         enum('admin', 'member', 'viewer', 'guest') [not null, default: 'member']
+  token        varchar(255) [not null, unique]
+  status       enum('pending', 'accepted', 'declined', 'expired') [not null, default: 'pending']
+  expires_at   datetime     [not null]
+  created_at   datetime     [not null]
+}
+
+Table boards{
+  id               integer      [primary key, not null, increment]
+  workspace_id     integer      [not null, ref: > workspaces.id]
+  created_by       integer      [not null, ref: > users.id]
+  name             varchar(150) [not null]
+  description      varchar(500) [null]
+  background_color varchar(7)   [null]
+  background_image varchar(500) [null]
+  visibility       enum('workspace', 'private', 'public') [not null, default: 'workspace']
+  is_archived      boolean      [not null, default: false]
+  position         integer      [not null, default: 0]
+  created_at       datetime     [not null]
+  updated_at       datetime     [not null]
+}
+
+Table board_members{
+  board_id integer  [not null, ref: > boards.id]
+  user_id  integer  [not null, ref: > users.id]
+  role     enum('admin', 'member', 'viewer') [not null, default: 'member']
+  added_at datetime [not null]
+  added_by integer  [not null, ref: > users.id]
+  primary key(board_id, user_id)
+}
+
+Table columns{
+  id             integer      [primary key, not null, increment]
+  board_id       integer      [not null, ref: > boards.id]
+  name           varchar(100) [not null]
+  position       integer      [not null, default: 0]
+  color          varchar(7)   [null]
+  cards_limit    integer      [null]
+  is_done_column boolean      [not null, default: false]
+  created_at     datetime     [not null]
+  updated_at     datetime     [not null]
+}
+
+Table cards{
+  id          integer      [primary key, not null, increment]
+  column_id   integer      [not null, ref: > columns.id]
+  board_id    integer      [not null, ref: > boards.id]
+  created_by  integer      [not null, ref: > users.id]
+  title       varchar(300) [not null]
+  description text         [null]
+  position    integer      [not null, default: 0]
+  due_date    date         [null]
+  is_archived boolean      [not null, default: false]
+  priority    enum('none', 'low', 'medium', 'high', 'urgent') [not null, default: 'none']
+  created_at  datetime     [not null]
+  updated_at  datetime     [not null]
+}
+
+Table card_assignments{
+  card_id     integer  [not null, ref: > cards.id]
+  user_id     integer  [not null, ref: > users.id]
+  assigned_by integer  [not null, ref: > users.id]
+  assigned_at datetime [not null]
+  primary key(card_id, user_id)
+}
+
+Table subtasks{
+  id           integer      [primary key, not null, increment]
+  card_id      integer      [not null, ref: > cards.id]
+  created_by   integer      [not null, ref: > users.id]
+  title        varchar(300) [not null]
+  is_completed boolean      [not null, default: false]
+  position     integer      [not null, default: 0]
+  created_at   datetime     [not null]
+  updated_at   datetime     [not null]
+}
+
+Table comments{
+  id         integer  [primary key, not null, increment]
+  card_id    integer  [not null, ref: > cards.id]
+  user_id    integer  [not null, ref: > users.id]
+  content    text     [not null]
+  is_edited  boolean  [not null, default: false]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+}
+
+Table tags{
+  id           integer     [primary key, not null, increment]
+  workspace_id integer     [not null, ref: > workspaces.id]
+  name         varchar(50) [not null]
+  color        varchar(7)  [not null]
+  created_at   datetime    [not null]
+}
+
+Table card_tags{
+  card_id  integer  [not null, ref: > cards.id]
+  tag_id   integer  [not null, ref: > tags.id]
+  added_at datetime [not null]
+  primary key(card_id, tag_id)
+}
+
+Table files{
+  id            integer      [primary key, not null, increment]
+  uploaded_by   integer      [not null, ref: > users.id]
+  entity_type   varchar(50)  [not null]
+  entity_id     integer      [not null]
+  file_path     varchar(500) [not null]
+  original_name varchar(255) [not null]
+  mime_type     varchar(100) [not null]
+  size_bytes    integer      [not null]
+  created_at    datetime     [not null]
+}
+
+Table custom_fields{
+  id           integer      [primary key, not null, increment]
+  board_id     integer      [not null, ref: > boards.id]
+  name         varchar(100) [not null]
+  field_type   enum('text', 'number', 'date', 'checkbox', 'dropdown', 'url') [not null]
+  options_json text         [null]
+  position     integer      [not null, default: 0]
+  created_at   datetime     [not null]
+}
+
+Table card_custom_values{
+  card_id    integer  [not null, ref: > cards.id]
+  field_id   integer  [not null, ref: > custom_fields.id]
+  value      text     [null]
+  updated_at datetime [not null]
+  primary key(card_id, field_id)
+}
+
+Table audit_logs{
+  id           integer      [primary key, not null, increment]
+  user_id      integer      [null, ref: > users.id]
+  workspace_id integer      [null, ref: > workspaces.id]
+  board_id     integer      [null, ref: > boards.id]
+  card_id      integer      [null, ref: > cards.id]
+  entity_type  varchar(50)  [not null]
+  action       varchar(100) [not null]
+  old_value    text         [null]
+  new_value    text         [null]
+  ip_address   varchar(45)  [null]
+  created_at   datetime     [not null]
+}
+
+Table notifications{
+  id           integer      [primary key, not null, increment]
+  recipient_id integer      [not null, ref: > users.id]
+  sender_id    integer      [null, ref: > users.id]
+  card_id      integer      [null, ref: > cards.id]
+  workspace_id integer      [null, ref: > workspaces.id]
+  type         enum('card_assigned', 'card_due', 'comment_added', 'mention', 'board_invite', 'workspace_invite') [not null]
+  message      varchar(500) [not null]
+  is_read      boolean      [not null, default: false]
+  created_at   datetime     [not null]
+}

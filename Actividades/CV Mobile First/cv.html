@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV Mijael Lujan Gandarillas</title>
     <style>
 
@@ -84,19 +84,19 @@
         background: #fff;
       }
 
-      section{
+      .seccion{
         border-bottom: 0.125rem solid #c7c7c7;
       }
 
-      section:last-child{
+      .seccion:last-child{
         border-bottom: none;
       }
 
-      section details{
+      .seccion details{
         width: 100%;
       }
 
-      section details summary{
+      .seccion details summary{
         font-size: 1rem;
         font-weight: 700;
         letter-spacing: 0.1125rem;
@@ -109,11 +109,11 @@
         width: 100%;
       }
 
-      section details summary::-webkit-details-marker{
+      .seccion details summary::-webkit-details-marker{
         display: none;
       }
 
-      section details[open] summary{
+      .seccion details[open] summary{
         padding-bottom: 0.625rem;
       }
 
@@ -121,7 +121,7 @@
         padding: 0 1.5rem 1.25rem;
       }
 
-      section p{
+      .seccion p{
         font-size: 0.875rem;
         font-weight: 300;
         color: #555;
@@ -129,15 +129,15 @@
         margin-bottom: 0.25rem;
       }
 
-      section p:last-child{
+      .seccion p:last-child{
         margin-bottom: 0;
       }
 
-      section ul{
+      .seccion ul{
         list-style: none;
       }
 
-      section li{
+      .seccion li{
         font-size: 0.875rem;
         font-weight: 300;
         color: #555;
@@ -157,8 +157,8 @@
       }
 
       .footer-foto{
-        width: 10rem;
-        height: 10rem;
+        width: 12rem;
+        height: 12rem;
         flex-shrink: 0;
         margin: 0 auto 0.625rem auto;
       }
@@ -190,113 +190,6 @@
         margin-bottom: 0.125rem;
       }
 
-      @media (min-width: 48rem){
-
-        header{
-          padding: 3rem 3.75rem 2.5rem;
-          display: grid;
-          grid-template-columns: 3fr 2fr;
-          grid-template-rows: auto auto auto;
-          column-gap: 3rem;
-          align-items: start;
-        }
-
-        header h1{
-          font-size: 3rem;
-          grid-column: 1;
-          grid-row: 1;
-        }
-
-        .subtitulo{
-          font-size: 2rem;
-          grid-column: 1;
-          grid-row: 2;
-        }
-
-        .bio{
-          font-size: 1rem;
-          grid-column: 1;
-          grid-row: 3;
-          margin-bottom: 0;
-        }
-
-        .contacto{
-          grid-column: 2;
-          grid-row: 1 / 4;
-          align-self: start;
-          width: fit-content;
-          min-width: 70%;
-        }
-
-        .contacto strong{
-          font-size: 0.68rem;
-        }
-
-        .contacto a{
-          font-size: 0.875rem;
-        }
-
-        section details{
-          display: grid;
-          grid-template-columns: 14rem 1fr;
-          align-items: start;
-        }
-
-        section details summary{
-          font-size: 1.3rem;
-          padding: 1.5rem 1.5rem 1.5rem 3.75rem;
-          grid-column: 1;
-          grid-row: 1;
-        }
-
-        section details[open] summary{
-          padding-bottom: 1.5rem;
-        }
-
-        .contenido{
-          grid-column: 2;
-          grid-row: 1;
-          padding: 1.5rem 3.75rem 1.5rem 1rem;
-          display: none;
-        }
-
-        section details[open] .contenido{
-          display: block;
-        }
-
-        section p{
-          font-size: 0.9rem;
-        }
-
-        section li{
-          font-size: 0.9rem;
-        }
-
-        footer{
-          padding: 2.25rem 3.75rem;
-        }
-
-        .footer{
-          flex-direction: row;
-          align-items: flex-start;
-        }
-
-        .footer-foto{
-          width: 11rem;
-          height: 11rem;
-          margin: 0;
-        }
-
-        .footer-info h3{
-          font-size: 0.75rem;
-        }
-
-        .footer-info li{
-          font-size: 0.9rem;
-        }
-
-      }
-
     </style>
   </head>
 
@@ -313,7 +206,7 @@
       <ul class="contacto">
         <li>
           <strong>EMAIL</strong>
-          <a href="mailto:lujanmijael@gmail.com">lujanmijael@gmail.com</a>
+          <a>lujanmijael@gmail.com</a>
         </li>
         <li>
           <strong>GITHUB</strong>
@@ -332,25 +225,25 @@
 
     <main>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Objetivo</summary>
           <div class="contenido">
             <p>Incorporarme a un equipo de desarrollo de software donde pueda aplicar mis conocimientos en Python, Java y desarrollo web, contribuir a proyectos reales y desarrollarme como Ingeniero de Software profesional.</p>
           </div>
         </details>
-      </section>
+      </div>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Sobre m&iacute;</summary>
           <div class="contenido">
             <p>Soy un estudiante de Ingenier&iacute;a Inform&aacute;tica en s&eacute;ptimo semestre, apasionado por el desarrollo de software y la resoluci&oacute;n de problemas. He trabajado con distintas tecnolog&iacute;as a lo largo de mi formaci&oacute;n, desde desarrollo web hasta inteligencia artificial aplicada. Busco mi primera oportunidad profesional donde pueda aportar y seguir creciendo en un entorno real.</p>
           </div>
         </details>
-      </section>
+      </div>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Habilidades</summary>
           <div class="contenido">
@@ -361,9 +254,9 @@
             </ul>
           </div>
         </details>
-      </section>
+      </div>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Educaci&oacute;n</summary>
           <div class="contenido">
@@ -371,9 +264,9 @@
             <p>Cochabamba, Bolivia</p>
           </div>
         </details>
-      </section>
+      </div>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Experiencia</summary>
           <div class="contenido">
@@ -381,9 +274,9 @@
             <p>Proyectos desarrollados de manera independiente como parte de mi formaci&oacute;n acad&eacute;mica y aprendizaje autodidacta.</p>
           </div>
         </details>
-      </section>
+      </div>
 
-      <section>
+      <div class="seccion">
         <details>
           <summary>Idiomas</summary>
           <div class="contenido">
@@ -393,17 +286,17 @@
             </ul>
           </div>
         </details>
-      </section>
+      </div>
 
     </main>
 
     <footer>
       <div class="footer">
         <div class="footer-foto">
-          <img src="imagen.svg" alt="Mijael Lujan" />
+          <img src="imagen.svg" alt="Mijael Lujan">
         </div>
         <div class="footer-info">
-          <h3>Desarrollador de Software</h3>
+          <h2>Desarrollador de Software</h2>
           <ul>
             <li>Abierto a oportunidades de pr&aacute;cticas profesionales y proyectos</li>
             <li>Experiencia en desarrollo freelance de software acad&eacute;mico y aplicaciones</li>
