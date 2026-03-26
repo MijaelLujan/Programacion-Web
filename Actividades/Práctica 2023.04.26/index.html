@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <title>Juego simple</title>
 <style>
-  .matriz {
+  .matriz{
     display: grid;
     grid-template-columns: repeat(4, 60px);
     gap: 4px;
     margin-top: 10px;
   }
 
-  .celda {
+  .celda{
     width: 60px;
     height: 60px;
     border: 1px solid black;
   }
 
-  .blanco { background: white; }
+  .blanco{ background: white; }
 
-  .humano { background: skyblue !important; }
-  .maquina { background: orange !important; }
+  .humano{ background: skyblue !important; }
+  .maquina{ background: orange !important; }
 </style>
 </head>
 <body>
@@ -37,12 +37,12 @@ let activo = false;
 const matrizDiv = document.getElementById("matriz");
 const btn = document.getElementById("iniciar");
 
-function iniciarJuego() {
+function iniciarJuego(){
   tablero = [];
 
-  for (let i = 0; i < n; i++) {
+  for(let i = 0; i < n; i++){
     tablero[i] = [];
-    for (let j = 0; j < n; j++) {
+    for(let j = 0; j < n; j++){
       tablero[i][j] = null;
     }
   }
@@ -52,22 +52,22 @@ function iniciarJuego() {
   activo = true;
 }
 
-function renderizar() {
+function renderizar(){
   matrizDiv.innerHTML = "";
 
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
       let celda = document.createElement("div");
       celda.classList.add("celda");
 
-      if ((i + j) % 2 === 0) {
+      if((i + j) % 2 === 0){
         celda.classList.add("blanco");
-      } else {
+      } else{
         celda.classList.add("blanco");
       }
 
-      if (tablero[i][j] === "humano") celda.classList.add("humano");
-      if (tablero[i][j] === "maquina") celda.classList.add("maquina");
+      if(tablero[i][j] === "humano") celda.classList.add("humano");
+      if(tablero[i][j] === "maquina") celda.classList.add("maquina");
 
       celda.dataset.fila = i;
       celda.dataset.col = j;
@@ -79,18 +79,18 @@ function renderizar() {
   }
 }
 
-function pintar(fila, col, jugador) {
-  for (let i = fila - 1; i <= fila + 1; i++) {
-    for (let j = col - 1; j <= col + 1; j++) {
-      if (i >= 0 && i < n && j >= 0 && j < n) {
+function pintar(fila, col, jugador){
+  for(let i = fila - 1; i <= fila + 1; i++){
+    for(let j = col - 1; j <= col + 1; j++){
+      if(i >= 0 && i < n && j >= 0 && j < n){
         tablero[i][j] = jugador;
       }
     }
   }
 }
 
-function clickCelda(e) {
-  if (!activo || turno !== "humano") return;
+function clickCelda(e){
+  if(!activo || turno !== "humano") return;
 
   let f = parseInt(e.target.dataset.fila);
   let c = parseInt(e.target.dataset.col);
@@ -102,18 +102,18 @@ function clickCelda(e) {
   setTimeout(turnoMaquina, 400);
 }
 
-function turnoMaquina() {
+function turnoMaquina(){
   let libres = [];
 
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (tablero[i][j] !== "maquina") {
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      if(tablero[i][j] !== "maquina"){
         libres.push([i, j]);
       }
     }
   }
 
-  if (libres.length === 0) return;
+  if(libres.length === 0) return;
 
   let r = Math.floor(Math.random() * libres.length);
   let [f, c] = libres[r];
