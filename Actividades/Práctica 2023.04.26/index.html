@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Juego</title>
+
+<style>
+  .matriz{
+    display: grid;
+    grid-template-columns: repeat(4, 60px);
+    gap: 4px;
+    margin-top: 10px;
+  }
+
+  .celda{
+    width: 60px;
+    height: 60px;
+    border: 1px solid black;
+  }
+
+  .blanco{ background: white; }
+  .humano{ background: skyblue; }
+  .maquina{ background: orange; }
+</style>
+</head>
+<body>
+
+<div id="matriz" class="matriz"></div>
+
+<script>
+let n = 4;
+let tablero = [];
+let turno = "humano";
+let activo = false;
+
+const matrizDiv = document.getElementById("matriz");
+
+function guardar(){
+  localStorage.setItem("tablero", JSON.stringify(tablero));
+  localStorage.setItem("turno", turno);
+  localStorage.setItem("activo", activo);
+}
+
+function cargar(){
+  const t = localStorage.getItem("tablero");
+  const tr = localStorage.getItem("turno");
+  const ac = localStorage.getItem("activo");
+
+  if(t){
+    tablero = JSON.parse(t);
+    turno = tr;
+    activo = (ac === "true");
+    renderizar();
+  } else{
+    iniciarJuego();
+  }
+}
+
+function iniciarJuego(){
+  tablero = [];
+
+  for(let i = 0; i < n; i++){
+    tablero[i] = [];
+    for(let j = 0; j < n; j++){
+      tablero[i][j] = null;
+    }
+  }
+
+  turno = "humano";
+  activo = true;
+
+  guardar();
+  renderizar();
+}
+
+function renderizar(){
+  matrizDiv.innerHTML = "";
+
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      let celda = document.createElement("div");
+      celda.classList.add("celda", "blanco");
+
+      if(tablero[i][j] === "humano") celda.classList.add("humano");
+      if(tablero[i][j] === "maquina") celda.classList.add("maquina");
+
+      celda.dataset.fila = i;
+      celda.dataset.col = j;
+
+      celda.addEventListener("click", clickCelda);
+
+      matrizDiv.appendChild(celda);
+    }
+  }
+}
+
+function pintar(fila, col, jugador){
+  for(let i = fila - 1; i <= fila + 1; i++){
+    for(let j = col - 1; j <= col + 1; j++){
+      if(i >= 0 && i < n && j >= 0 && j < n){
+        if(tablero[i][j] === null){
+          tablero[i][j] = jugador;
+        }
+      }
+    }
+  }
+}
+
+function clickCelda(e){
+  if(!activo || turno !== "humano") return;
+
+  let f = parseInt(e.target.dataset.fila);
+  let c = parseInt(e.target.dataset.col);
+
+  if(tablero[f][c] !== null) return;
+
+  pintar(f, c, "humano");
+  turno = "maquina";
+
+  guardar();
+  renderizar();
+
+  setTimeout(turnoMaquina, 400);
+}
+
+function turnoMaquina(){
+  let libres = [];
+
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      if(tablero[i][j] === null){
+        libres.push([i, j]);
+      }
+    }
+  }
+
+  if(libres.length === 0){
+    activo = false;
+    guardar();
+    return;
+  }
+
+  let r = Math.floor(Math.random() * libres.length);
+  let [f, c] = libres[r];
+
+  pintar(f, c, "maquina");
+  turno = "humano";
+
+  guardar();
+  renderizar();
+}
+
+cargar();
+</script>
+
+</body>
+</html>
